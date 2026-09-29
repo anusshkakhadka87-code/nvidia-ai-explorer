@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NVIDIA AI Explorer</title>
+
+  <style>
+    :root {
+      --pink: #ff9fba;
+      --dark-pink: #ed6f96;
+      --background: #fff7f9;
+      --card: #ffffff;
+      --text: #4a2934;
+      --muted: #7a5b66;
+      --border: #f3c4d1;
+      --soft-pink: #fff0f4;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background: #ffe4ec;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    nav {
+      max-width: 1150px;
+      margin: auto;
+      padding: 18px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: bold;
+      color: var(--dark-pink);
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      color: var(--text);
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 22px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      color: var(--dark-pink);
+    }
+
+    .hero {
+      min-height: 570px;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(255, 247, 249, 0.98),
+          rgba(255, 247, 249, 0.75)
+        ),
+        radial-gradient(
+          circle at 80% 25%,
+          #ffd1df 0%,
+          transparent 35%
+        );
+    }
+
+    .hero-content {
+      max-width: 1150px;
+      width: 100%;
+      margin: auto;
+      padding: 70px 25px;
+    }
+
+    .tag {
+      display: inline-block;
+      color: var(--dark-pink);
+      border: 1px solid var(--dark-pink);
+      padding: 6px 13px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      max-width: 700px;
+      font-size: clamp(38px, 6vw, 70px);
+      line-height: 1.05;
+      margin-bottom: 22px;
+    }
+
+    h1 span {
+      color: var(--dark-pink);
+    }
+
+    .hero p {
+      max-width: 650px;
+      color: var(--muted);
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+
+    .button {
+      display: inline-block;
+      background: var(--pink);
+      color: var(--text);
+      padding: 13px 23px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .button:hover {
+      background: var(--dark-pink);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    section {
+      max-width: 1150px;
+      margin: auto;
+      padding: 75px 25px;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 42px;
+    }
+
+    .section-title h2 {
+      color: var(--dark-pink);
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+    }
+
+    .about {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 35px;
+      align-items: center;
+    }
+
+    .about-text p {
+      color: var(--muted);
+      margin-bottom: 15px;
+    }
+
+    .highlight-box {
+      background: var(--card);
+      border-left: 5px solid var(--pink);
+      padding: 28px;
+      border-radius: 8px;
+      box-shadow: 0 10px 35px rgba(180, 100, 125, 0.15);
+    }
+
+    .highlight-box h3 {
+      color: var(--dark-pink);
+      margin-bottom: 12px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 25px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      box-shadow: 0 5px 18px rgba(180, 100, 125, 0.12);
+      transition: 0.25s;
+    }
+
+    .card:hover {
+      transform: translateY(-7px);
+      border-color: var(--dark-pink);
+    }
+
+    .card-icon {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      color: var(--dark-pink);
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .use-case-select {
+      width: 100%;
+      max-width: 500px;
+      display: block;
+      margin: 0 auto 25px;
+      padding: 14px;
+      border-radius: 5px;
+      border: 1px solid var(--pink);
+      background: var(--card);
+      color: var(--text);
+      font-size: 16px;
+    }
+
+    .use-case-result {
+      max-width: 750px;
+      min-height: 130px;
+      margin: auto;
+      background: var(--card);
+      border-radius: 8px;
+      padding: 25px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      box-shadow: 0 5px 18px rgba(180, 100, 125, 0.1);
+    }
+
+    .use-case-result h3 {
+      color: var(--dark-pink);
+      margin-bottom: 8px;
+    }
+
+    .quiz-box {
+      max-width: 700px;
+      margin: auto;
+      background: var(--card);
+      padding: 30px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      box-shadow: 0 5px 18px rgba(180, 100, 125, 0.1);
+    }
+
+    .quiz-box h3 {
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .option {
+      display: block;
+      background: var(--soft-pink);
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .option:hover {
+      background: #ffdce7;
+    }
+
+    .option input {
+      margin-right: 10px;
+    }
+
+    #quiz-result {
+      margin-top: 18px;
+      font-weight: bold;
+    }
+
+    .innovation {
+      background: var(--soft-pink);
+      max-width: none;
+    }
+
+    .innovation-content {
+      max-width: 1150px;
+      margin: auto;
+      padding: 0 25px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .innovation-content h2 {
+      color: var(--dark-pink);
+      margin-bottom: 15px;
+    }
+
+    .innovation-content p {
+      color: var(--muted);
+    }
+
+    .innovation-list {
+      list-style: none;
+    }
+
+    .innovation-list li {
+      background: var(--card);
+      margin: 10px 0;
+      padding: 14px;
+      border-left: 4px solid var(--pink);
+      border-radius: 4px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 28px;
+      border-top: 1px solid var(--border);
+      font-size: 14px;
+      background: #ffe4ec;
+    }
+
+    @media (max-width: 800px) {
+      nav ul {
+        display: none;
+      }
+
+      .about,
+      .innovation-content {
+        grid-template-columns: 1fr;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <nav>
+      <div class="logo">
+        NVIDIA <span>AI EXPLORER</span>
+      </div>
+
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#technologies">Technologies</a></li>
+        <li><a href="#uses">Use Cases</a></li>
+        <li><a href="#quiz">Quiz</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <div class="hero-content">
+        <div class="tag">STUDENT AI PROJECT</div>
+
+        <h1>
+          Explore the future with
+          <span>NVIDIA AI</span>
+        </h1>
+
+        <p>
+          Learn how artificial intelligence, accelerated computing and
+          intelligent applications are changing education, healthcare,
+          gaming, robotics and other industries.
+        </p>
+
+        <a href="#technologies" class="button">
+          Start Exploring
+        </a>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="section-title">
+        <h2>What is NVIDIA AI?</h2>
+        <p>A simple introduction for students</p>
+      </div>
+
+      <div class="about">
+        <div class="about-text">
+          <p>
+            NVIDIA AI refers to technologies and platforms that help
+            developers and organisations build and run artificial
+            intelligence applications.
+          </p>
+
+          <p>
+            These technologies support areas such as machine learning,
+            generative AI, computer vision, robotics, simulations and
+            high-performance computing.
+          </p>
+
+          <p>
+            This educational website explains important concepts in a
+            simple and interactive way.
+          </p>
+        </div>
+
+        <div class="highlight-box">
+          <h3>Did you know?</h3>
+
+          <p>
+            AI systems can learn patterns from data and use those patterns
+            to make predictions, generate content or assist people with
+            complex tasks.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="technologies">
+      <div class="section-title">
+        <h2>Important AI Technologies</h2>
+        <p>Explore the main areas connected with NVIDIA AI</p>
+      </div>
+
+      <div class="cards">
+
+        <div class="card">
+          <div class="card-icon">🧠</div>
+          <h3>Deep Learning</h3>
+          <p>
+            Deep learning uses neural networks to identify patterns in
+            images, text, sound and other types of data.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <h3>Accelerated Computing</h3>
+          <p>
+            Specialised processors can speed up demanding calculations
+            used in scientific computing and artificial intelligence.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🤖</div>
+          <h3>Generative AI</h3>
+          <p>
+            Generative AI can produce text, images, code, audio and other
+            content based on user instructions.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">👁️</div>
+          <h3>Computer Vision</h3>
+          <p>
+            Computer vision allows computers to understand information
+            from photographs, videos and cameras.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🦾</div>
+          <h3>Robotics</h3>
+          <p>
+            AI can help robots understand their environment, plan actions
+            and perform useful tasks.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">🌍</div>
+          <h3>Digital Twins</h3>
+          <p>
+            Digital twins are computer-based models that can represent
+            real-world objects, systems or environments.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="uses">
+      <div class="section-title">
+        <h2>AI Use-Case Explorer</h2>
+        <p>Select an industry to see how AI can be used</p>
+      </div>
+
+      <select class="use-case-select" id="industrySelect">
+        <option value="">Choose an industry</option>
+        <option value="education">Education</option>
+        <option value="healthcare">Healthcare</option>
+        <option value="gaming">Gaming</option>
+        <option value="robotics">Robotics</option>
+        <option value="climate">Climate and Science</option>
+      </select>
+
+      <div class="use-case-result" id="useCaseResult">
+        Your selected use case will appear here.
+      </div>
+    </section>
+
+    <section id="quiz">
+      <div class="section-title">
+        <h2>AI Readiness Quiz</h2>
+        <p>Test your knowledge of artificial intelligence</p>
+      </div>
+
+      <div class="quiz-box">
+        <h3>
+          Which technology helps computers understand images and videos?
+        </h3>
+
+        <label class="option">
+          <input type="radio" name="answer" value="wrong">
+          Word processing
+        </label>
+
+        <label class="option">
+          <input type="radio" name="answer" value="correct">
+          Computer vision
+        </label>
+
+        <label class="option">
+          <input type="radio" name="answer" value="wrong">
+          Spreadsheet formatting
+        </label>
+
+        <button class="button" onclick="checkAnswer()">
+          Check Answer
+        </button>
+
+        <div id="quiz-result"></div>
+      </div>
+    </section>
+
+    <section class="innovation">
+      <div class="innovation-content">
+
+        <div>
+          <h2>Our Digital Innovation</h2>
+
+          <p>
+            Unlike a normal information website, NVIDIA AI Explorer
+            combines learning content with interactive features.
+            Students can explore different industries and test their
+            knowledge through a quiz.
+          </p>
+        </div>
+
+        <ul class="innovation-list">
+          <li>Interactive AI use-case explorer</li>
+          <li>Student-friendly explanations</li>
+          <li>Instant quiz feedback</li>
+          <li>Responsive design for mobile devices</li>
+          <li>Simple visual interface for beginners</li>
+        </ul>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    Created as a CIA-II Student Project | NVIDIA AI Explorer
+  </footer>
+
+  <script>
+    const industrySelect =
+      document.getElementById("industrySelect");
+
+    const useCaseResult =
+      document.getElementById("useCaseResult");
+
+    const useCases = {
+      education: `
+        <h3>Education</h3>
+        <p>
+          AI can support personalised learning, automatic feedback,
+          intelligent tutoring systems and educational content creation.
+        </p>
+      `,
+
+      healthcare: `
+        <h3>Healthcare</h3>
+        <p>
+          AI can help analyse medical images, assist researchers and
+          support doctors in identifying patterns in health data.
+          Human experts should always make final medical decisions.
+        </p>
+      `,
+
+      gaming: `
+        <h3>Gaming</h3>
+        <p>
+          AI can help create realistic graphics, intelligent game
+          characters, simulations and more immersive gaming experiences.
+        </p>
+      `,
+
+      robotics: `
+        <h3>Robotics</h3>
+        <p>
+          AI can help robots understand their surroundings, recognise
+          objects, navigate environments and complete tasks.
+        </p>
+      `,
+
+      climate: `
+        <h3>Climate and Science</h3>
+        <p>
+          AI can assist with scientific simulations, weather analysis,
+          climate modelling and the study of large datasets.
+        </p>
+      `
+    };
+
+    industrySelect.addEventListener("change", function () {
+      const selectedIndustry = industrySelect.value;
+
+      if (selectedIndustry === "") {
+        useCaseResult.innerHTML =
+          "Your selected use case will appear here.";
+      } else {
+        useCaseResult.innerHTML =
+          useCases[selectedIndustry];
+      }
+    });
+
+    function checkAnswer() {
+      const selectedAnswer =
+        document.querySelector(
+          'input[name="answer"]:checked'
+        );
+
+      const result =
+        document.getElementById("quiz-result");
+
+      if (!selectedAnswer) {
+        result.style.color = "#d99a00";
+        result.textContent =
+          "Please select an answer first.";
+      } else if (selectedAnswer.value === "correct") {
+        result.style.color = "#d94f7d";
+        result.textContent =
+          "Correct! Computer vision helps computers understand images and videos.";
+      } else {
+        result.style.color = "#d9534f";
+        result.textContent =
+          "Incorrect. The correct answer is Computer vision.";
+      }
+    }
+  </script>
+
+</body>
+</html>
